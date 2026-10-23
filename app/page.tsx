@@ -1,4 +1,5 @@
 // @ts-nocheck
+/* eslint-disable */
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -53,21 +54,38 @@ export default function IndependentAdminApp() {
       const { data: profiles } = await supabase.from('profiles').select('*')
       setProfilesList(profiles || [])
 
-      // 修改这里：将 ai_media 改为 generations
       const { data: media } = await supabase.from('generations').select('*').order('created_at', { ascending: false })
       setMediaList(media || [])
 
-      // 修改这里：将 ratings 改为 generation_votes
-      const { data: ratings } = await supabase.from('generation_votes').select('*')
-      setRatingsList(ratings || [])
+      // 同时获取 generation_votes 和 votes 两张表的数据并合并
+      const { data: genVotes } = await supabase.from('generation_votes').select('*')
+      const { data: generalVotes } = await supabase.from('votes').select('*')
+
+      const formattedGenVotes = (genVotes || []).map(v => ({
+        id: v.id,
+        source: 'generation_votes',
+        score: v.vote ?? v.rating ?? 0,
+        user_id: v.user_id,
+        created_at: v.created_at
+      }))
+
+      const formattedGeneralVotes = (generalVotes || []).map(v => ({
+        id: v.id,
+        source: 'votes',
+        score: v.vote_type === 'up' ? 1 : v.vote_type === 'down' ? -1 : 0,
+        user_id: v.user_id,
+        created_at: v.created_at
+      }))
+
+      const combinedRatings = [...formattedGenVotes, ...formattedGeneralVotes]
+      setRatingsList(combinedRatings)
 
       const totalUsers = profiles?.length || 0
       const totalMedia = media?.length || 0
-      const safeRatings = ratings || []
-      const totalRatings = safeRatings.length
+      const totalRatings = combinedRatings.length
       let avgRating = '0.0'
       if (totalRatings > 0) {
-        const sum = safeRatings.reduce((acc, curr) => acc + (curr.rating || curr.vote || 0), 0)
+        const sum = combinedRatings.reduce((acc, curr) => acc + curr.score, 0)
         avgRating = (sum / totalRatings).toFixed(1)
       }
 
@@ -91,7 +109,7 @@ export default function IndependentAdminApp() {
     e.preventDefault()
     if (editingId) {
       const { error } = await supabase
-          .from('generations') // 修改这里
+          .from('generations')
           .update({ prompt: formData.prompt, content: formData.content, image_url: formData.image_url })
           .eq('id', editingId)
 
@@ -104,7 +122,7 @@ export default function IndependentAdminApp() {
       }
     } else {
       const { error } = await supabase
-          .from('generations') // 修改这里
+          .from('generations')
           .insert([{ prompt: formData.prompt, content: formData.content, image_url: formData.image_url, user_id: user.id }])
 
       if (error) alert('Error: ' + error.message)
@@ -118,7 +136,7 @@ export default function IndependentAdminApp() {
 
   const handleDeleteMedia = async (id: string) => {
     if (!confirm('Are you sure you want to delete this media asset?')) return
-    const { error } = await supabase.from('generations').delete().eq('id', id) // 修改这里
+    const { error } = await supabase.from('generations').delete().eq('id', id)
     if (error) alert('Error: ' + error.message)
     else setMediaList(mediaList.filter(item => item.id !== id))
   }
@@ -200,12 +218,12 @@ export default function IndependentAdminApp() {
                     <p className="text-3xl font-black mt-2 text-emerald-400">{stats.totalMedia}</p>
                   </div>
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow">
-                    <p className="text-slate-400 text-sm">Total Ratings</p>
+                    <p className="text-slate-400 text-sm">Total Ratings / Votes</p>
                     <p className="text-3xl font-black mt-2 text-amber-400">{stats.totalRatings}</p>
                   </div>
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl shadow">
-                    <p className="text-slate-400 text-sm">Average Rating</p>
-                    <p className="text-3xl font-black mt-2 text-pink-400">{stats.avgRating} / 5.0</p>
+                    <p className="text-slate-400 text-sm">Average Score</p>
+                    <p className="text-3xl font-black mt-2 text-pink-400">{stats.avgRating}</p>
                   </div>
                 </div>
             )}
@@ -275,13 +293,14 @@ export default function IndependentAdminApp() {
           </div>
 
           <div className="mb-10 bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-            <h2 className="text-xl font-bold mb-4">⭐ Ratings & Upvotes/Downvotes (READ)</h2>
+            <h2 className="text-xl font-bold mb-4">⭐ Ratings & Votes Management (READ)</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-slate-300">
                 <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
                 <tr>
-                  <th className="py-3 px-4">Rating ID</th>
-                  <th className="py-3 px-4">Score</th>
+                  <th className="py-3 px-4">Record ID</th>
+                  <th className="py-3 px-4">Source Table</th>
+                  <th className="py-3 px-4">Score / Value</th>
                   <th className="py-3 px-4">User ID</th>
                 </tr>
                 </thead>
@@ -289,7 +308,8 @@ export default function IndependentAdminApp() {
                 {ratingsList.map(r => (
                     <tr key={r.id} className="border-b border-slate-800/50">
                       <td className="py-3 px-4 font-mono text-xs text-slate-400">{r.id}</td>
-                      <td className="py-3 px-4 font-bold text-amber-400">{r.rating || r.vote || 'N/A'}</td>
+                      <td className="py-3 px-4 text-xs text-indigo-300">{r.source}</td>
+                      <td className="py-3 px-4 font-bold text-amber-400">{r.score}</td>
                       <td className="py-3 px-4 font-mono text-xs text-slate-400">{r.user_id || 'N/A'}</td>
                     </tr>
                 ))}
