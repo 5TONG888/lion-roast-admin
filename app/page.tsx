@@ -53,10 +53,12 @@ export default function IndependentAdminApp() {
       const { data: profiles } = await supabase.from('profiles').select('*')
       setProfilesList(profiles || [])
 
-      const { data: media } = await supabase.from('ai_media').select('*').order('created_at', { ascending: false })
+      // 修改这里：将 ai_media 改为 generations
+      const { data: media } = await supabase.from('generations').select('*').order('created_at', { ascending: false })
       setMediaList(media || [])
 
-      const { data: ratings } = await supabase.from('ratings').select('*')
+      // 修改这里：将 ratings 改为 generation_votes
+      const { data: ratings } = await supabase.from('generation_votes').select('*')
       setRatingsList(ratings || [])
 
       const totalUsers = profiles?.length || 0
@@ -65,7 +67,7 @@ export default function IndependentAdminApp() {
       const totalRatings = safeRatings.length
       let avgRating = '0.0'
       if (totalRatings > 0) {
-        const sum = safeRatings.reduce((acc, curr) => acc + (curr.rating || 0), 0)
+        const sum = safeRatings.reduce((acc, curr) => acc + (curr.rating || curr.vote || 0), 0)
         avgRating = (sum / totalRatings).toFixed(1)
       }
 
@@ -89,7 +91,7 @@ export default function IndependentAdminApp() {
     e.preventDefault()
     if (editingId) {
       const { error } = await supabase
-          .from('ai_media')
+          .from('generations') // 修改这里
           .update({ prompt: formData.prompt, content: formData.content, image_url: formData.image_url })
           .eq('id', editingId)
 
@@ -102,7 +104,7 @@ export default function IndependentAdminApp() {
       }
     } else {
       const { error } = await supabase
-          .from('ai_media')
+          .from('generations') // 修改这里
           .insert([{ prompt: formData.prompt, content: formData.content, image_url: formData.image_url, user_id: user.id }])
 
       if (error) alert('Error: ' + error.message)
@@ -116,7 +118,7 @@ export default function IndependentAdminApp() {
 
   const handleDeleteMedia = async (id: string) => {
     if (!confirm('Are you sure you want to delete this media asset?')) return
-    const { error } = await supabase.from('ai_media').delete().eq('id', id)
+    const { error } = await supabase.from('generations').delete().eq('id', id) // 修改这里
     if (error) alert('Error: ' + error.message)
     else setMediaList(mediaList.filter(item => item.id !== id))
   }
@@ -287,7 +289,7 @@ export default function IndependentAdminApp() {
                 {ratingsList.map(r => (
                     <tr key={r.id} className="border-b border-slate-800/50">
                       <td className="py-3 px-4 font-mono text-xs text-slate-400">{r.id}</td>
-                      <td className="py-3 px-4 font-bold text-amber-400">{r.rating}</td>
+                      <td className="py-3 px-4 font-bold text-amber-400">{r.rating || r.vote || 'N/A'}</td>
                       <td className="py-3 px-4 font-mono text-xs text-slate-400">{r.user_id || 'N/A'}</td>
                     </tr>
                 ))}
