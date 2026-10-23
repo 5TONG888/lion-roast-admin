@@ -57,12 +57,11 @@ export default function IndependentAdminApp() {
       const { data: media } = await supabase.from('generations').select('*').order('created_at', { ascending: false })
       setMediaList(media || [])
 
-      // 同时获取 generation_votes 和 votes 两张表的数据并合并
       const { data: genVotes } = await supabase.from('generation_votes').select('*')
       const { data: generalVotes } = await supabase.from('votes').select('*')
 
       const formattedGenVotes = (genVotes || []).map(v => ({
-        id: v.id,
+        id: v.id || v.generation_id || 'N/A',
         source: 'generation_votes',
         score: v.vote ?? v.rating ?? 0,
         user_id: v.user_id,
@@ -70,7 +69,7 @@ export default function IndependentAdminApp() {
       }))
 
       const formattedGeneralVotes = (generalVotes || []).map(v => ({
-        id: v.id,
+        id: v.id || 'N/A',
         source: 'votes',
         score: v.vote_type === 'up' ? 1 : v.vote_type === 'down' ? -1 : 0,
         user_id: v.user_id,
@@ -305,8 +304,8 @@ export default function IndependentAdminApp() {
                 </tr>
                 </thead>
                 <tbody>
-                {ratingsList.map(r => (
-                    <tr key={r.id} className="border-b border-slate-800/50">
+                {ratingsList.map((r, index) => (
+                    <tr key={r.id + index} className="border-b border-slate-800/50">
                       <td className="py-3 px-4 font-mono text-xs text-slate-400">{r.id}</td>
                       <td className="py-3 px-4 text-xs text-indigo-300">{r.source}</td>
                       <td className="py-3 px-4 font-bold text-amber-400">{r.score}</td>
