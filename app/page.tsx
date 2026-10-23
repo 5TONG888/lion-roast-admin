@@ -62,7 +62,7 @@ export default function IndependentAdminApp() {
 
       const formattedGenVotes = (genVotes || []).map(v => ({
         id: v.id || v.generation_id || 'N/A',
-        source: 'generation_votes',
+        source: 'Ratings / Upvotes',
         score: v.vote ?? v.rating ?? 0,
         user_id: v.user_id,
         created_at: v.created_at
@@ -70,7 +70,7 @@ export default function IndependentAdminApp() {
 
       const formattedGeneralVotes = (generalVotes || []).map(v => ({
         id: v.id || 'N/A',
-        source: 'votes',
+        source: 'Ratings / Upvotes',
         score: v.vote_type === 'up' ? 1 : v.vote_type === 'down' ? -1 : 0,
         user_id: v.user_id,
         created_at: v.created_at
@@ -292,13 +292,13 @@ export default function IndependentAdminApp() {
           </div>
 
           <div className="mb-10 bg-slate-900 border border-slate-800 p-6 rounded-3xl">
-            <h2 className="text-xl font-bold mb-4">⭐ Ratings & Votes Management (READ)</h2>
+            <h2 className="text-xl font-bold mb-4">⭐ Upvotes / Downvotes / Ratings Management (READ)</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm text-slate-300">
                 <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
                 <tr>
                   <th className="py-3 px-4">Record ID</th>
-                  <th className="py-3 px-4">Source Table</th>
+                  <th className="py-3 px-4">Category</th>
                   <th className="py-3 px-4">Score / Value</th>
                   <th className="py-3 px-4">User ID</th>
                 </tr>
