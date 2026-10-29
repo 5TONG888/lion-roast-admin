@@ -337,7 +337,7 @@ export default function Week7AdminPanel() {
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-bold">🌐 Allowed Signup Domains (CRUD)</h3>
-                      <button onClick={() => { setModalType('allowedDomains'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 text-xs font-bold rounded-xl">+ Add Domain</button>
+                      <button onClick={() => { setModalType('allowedDomains'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl">+ Add Domain</button>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-sm text-slate-300">
@@ -349,8 +349,8 @@ export default function Week7AdminPanel() {
                             <tr key={d.id} className="border-b border-slate-800/50">
                               <td className="py-3 font-mono text-xs text-indigo-300">{d.domain}</td>
                               <td className="py-3 text-right space-x-2">
-                                <button onClick={() => { setModalType('allowedDomains'); setEditingItem(d); setFormInputs(d); }} className="px-2 py-1 bg-slate-800 text-xs rounded">Edit</button>
-                                <button onClick={() => handleDeleteItem('allowed_signup_domains', d.id)} className="px-2 py-1 bg-red-950 text-red-300 text-xs rounded">Delete</button>
+                                <button onClick={() => { setModalType('allowedDomains'); setEditingItem(d); setFormInputs(d); }} className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded">Edit</button>
+                                <button onClick={() => handleDeleteItem('allowed_signup_domains', d.id)} className="px-2 py-1 bg-red-950 hover:bg-red-900 text-red-300 text-xs rounded">Delete</button>
                               </td>
                             </tr>
                         ))}
@@ -363,7 +363,7 @@ export default function Week7AdminPanel() {
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-bold">📧 Whitelisted Email Addresses (CRUD)</h3>
-                      <button onClick={() => { setModalType('whitelistedEmails'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 text-xs font-bold rounded-xl">+ Add Whitelist Email</button>
+                      <button onClick={() => { setModalType('whitelistedEmails'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl">+ Add Whitelist Email</button>
                     </div>
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-sm text-slate-300">
@@ -375,8 +375,8 @@ export default function Week7AdminPanel() {
                             <tr key={e.id} className="border-b border-slate-800/50">
                               <td className="py-3 font-mono text-xs text-emerald-300">{e.email}</td>
                               <td className="py-3 text-right space-x-2">
-                                <button onClick={() => { setModalType('whitelistedEmails'); setEditingItem(e); setFormInputs(e); }} className="px-2 py-1 bg-slate-800 text-xs rounded">Edit</button>
-                                <button onClick={() => handleDeleteItem('whitelisted_emails', e.id)} className="px-2 py-1 bg-red-950 text-red-300 text-xs rounded">Delete</button>
+                                <button onClick={() => { setModalType('whitelistedEmails'); setEditingItem(e); setFormInputs(e); }} className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded">Edit</button>
+                                <button onClick={() => handleDeleteItem('whitelisted_emails', e.id)} className="px-2 py-1 bg-red-950 hover:bg-red-900 text-red-300 text-xs rounded">Delete</button>
                               </td>
                             </tr>
                         ))}
@@ -396,9 +396,9 @@ export default function Week7AdminPanel() {
                     <div className="space-y-4">
                       {data.promptChains.length === 0 ? <p className="text-xs text-slate-500">No prompt chains recorded.</p> : (
                           data.promptChains.map((chain: any) => (
-                              <div key={chain.id} className="p-4 bg-slate-950 border border-slate-800 rounded-2xl">
-                                <p className="font-bold text-sm text-indigo-400">{chain.name}</p>
-                                <p className="text-xs text-slate-400">{chain.description}</p>
+                              <div key={chain.id || Math.random()} className="p-4 bg-slate-950 border border-slate-800 rounded-2xl space-y-1">
+                                <p className="font-bold text-sm text-indigo-400">{chain.name || chain.title || 'Prompt Chain Record'}</p>
+                                <p className="text-xs text-slate-300">{chain.description || chain.prompt || JSON.stringify(chain)}</p>
                               </div>
                           ))
                       )}
@@ -409,7 +409,7 @@ export default function Week7AdminPanel() {
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-bold">🎛️ Prompt Chain Mix (READ / UPDATE)</h3>
-                      <button onClick={() => { setModalType('promptChainMix'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 text-xs font-bold rounded-xl">+ Add Mix</button>
+                      <button onClick={() => { setModalType('promptChainMix'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl">+ Add Mix</button>
                     </div>
                     <table className="w-full text-left text-sm text-slate-300">
                       <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
@@ -418,10 +418,10 @@ export default function Week7AdminPanel() {
                       <tbody>
                       {data.promptChainMix.map((mix: any) => (
                           <tr key={mix.id} className="border-b border-slate-800/50">
-                            <td className="py-3 font-mono text-xs">{mix.mix_weight}</td>
-                            <td className="py-3 font-bold text-emerald-400">{mix.is_active ? 'TRUE' : 'FALSE'}</td>
+                            <td className="py-3 font-mono text-xs">{mix.mix_weight || mix.weight || '1.0'}</td>
+                            <td className="py-3 font-bold text-emerald-400">{mix.is_active !== false ? 'TRUE' : 'FALSE'}</td>
                             <td className="py-3 text-right">
-                              <button onClick={() => { setModalType('promptChainMix'); setEditingItem(mix); setFormInputs(mix); }} className="px-2 py-1 bg-slate-800 text-xs rounded">Update Mix</button>
+                              <button onClick={() => { setModalType('promptChainMix'); setEditingItem(mix); setFormInputs(mix); }} className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded">Update Mix</button>
                             </td>
                           </tr>
                       ))}
@@ -433,7 +433,7 @@ export default function Week7AdminPanel() {
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-bold">🏢 LLM Providers (CRUD)</h3>
-                      <button onClick={() => { setModalType('llmProviders'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 text-xs font-bold rounded-xl">+ Add Provider</button>
+                      <button onClick={() => { setModalType('llmProviders'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl">+ Add Provider</button>
                     </div>
                     <table className="w-full text-left text-sm text-slate-300">
                       <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
@@ -442,11 +442,11 @@ export default function Week7AdminPanel() {
                       <tbody>
                       {data.llmProviders.map((prov: any) => (
                           <tr key={prov.id} className="border-b border-slate-800/50">
-                            <td className="py-3 font-bold text-sm">{prov.name}</td>
+                            <td className="py-3 font-bold text-sm">{prov.name || prov.provider_name}</td>
                             <td className="py-3 font-mono text-xs text-slate-400">{prov.api_base_url || 'N/A'}</td>
                             <td className="py-3 text-right space-x-2">
-                              <button onClick={() => { setModalType('llmProviders'); setEditingItem(prov); setFormInputs(prov); }} className="px-2 py-1 bg-slate-800 text-xs rounded">Edit</button>
-                              <button onClick={() => handleDeleteItem('llm_providers', prov.id)} className="px-2 py-1 bg-red-950 text-red-300 text-xs rounded">Delete</button>
+                              <button onClick={() => { setModalType('llmProviders'); setEditingItem(prov); setFormInputs(prov); }} className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded">Edit</button>
+                              <button onClick={() => handleDeleteItem('llm_providers', prov.id)} className="px-2 py-1 bg-red-950 hover:bg-red-900 text-red-300 text-xs rounded">Delete</button>
                             </td>
                           </tr>
                       ))}
@@ -458,7 +458,7 @@ export default function Week7AdminPanel() {
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-bold">🤖 LLM Models (CRUD)</h3>
-                      <button onClick={() => { setModalType('llmModels'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 text-xs font-bold rounded-xl">+ Add Model</button>
+                      <button onClick={() => { setModalType('llmModels'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl">+ Add Model</button>
                     </div>
                     <table className="w-full text-left text-sm text-slate-300">
                       <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
@@ -467,11 +467,11 @@ export default function Week7AdminPanel() {
                       <tbody>
                       {data.llmModels.map((mod: any) => (
                           <tr key={mod.id} className="border-b border-slate-800/50">
-                            <td className="py-3 font-mono text-xs text-amber-300">{mod.model_name}</td>
-                            <td className="py-3 font-bold text-emerald-400">{mod.is_enabled ? 'TRUE' : 'FALSE'}</td>
+                            <td className="py-3 font-mono text-xs text-amber-300">{mod.model_name || mod.name}</td>
+                            <td className="py-3 font-bold text-emerald-400">{mod.is_enabled !== false ? 'TRUE' : 'FALSE'}</td>
                             <td className="py-3 text-right space-x-2">
-                              <button onClick={() => { setModalType('llmModels'); setEditingItem(mod); setFormInputs(mod); }} className="px-2 py-1 bg-slate-800 text-xs rounded">Edit</button>
-                              <button onClick={() => handleDeleteItem('llm_models', mod.id)} className="px-2 py-1 bg-red-950 text-red-300 text-xs rounded">Delete</button>
+                              <button onClick={() => { setModalType('llmModels'); setEditingItem(mod); setFormInputs(mod); }} className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded">Edit</button>
+                              <button onClick={() => handleDeleteItem('llm_models', mod.id)} className="px-2 py-1 bg-red-950 hover:bg-red-900 text-red-300 text-xs rounded">Delete</button>
                             </td>
                           </tr>
                       ))}
@@ -485,9 +485,9 @@ export default function Week7AdminPanel() {
                     <div className="space-y-3">
                       {data.generationRequests.length === 0 ? <p className="text-xs text-slate-500">No request logs found.</p> : (
                           data.generationRequests.map((req: any) => (
-                              <div key={req.id} className="p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-1">
-                                <p className="font-bold text-indigo-300">Prompt: {req.prompt}</p>
-                                <p className="text-slate-400 font-mono">Status: {req.status} | Time: {new Date(req.created_at).toLocaleString()}</p>
+                              <div key={req.id || Math.random()} className="p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs space-y-1">
+                                <p className="font-bold text-indigo-300">Prompt: {req.prompt || req.query || req.user_prompt || 'N/A'}</p>
+                                <p className="text-slate-400 font-mono">Status: {req.status || 'completed'} | Time: {req.created_at ? new Date(req.created_at).toLocaleString() : 'N/A'}</p>
                               </div>
                           ))
                       )}
@@ -517,7 +517,7 @@ export default function Week7AdminPanel() {
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-bold">📖 Terms Directory (CRUD)</h3>
-                      <button onClick={() => { setModalType('terms'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 text-xs font-bold rounded-xl">+ Add Term</button>
+                      <button onClick={() => { setModalType('terms'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl">+ Add Term</button>
                     </div>
                     <table className="w-full text-left text-sm text-slate-300">
                       <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
@@ -529,8 +529,8 @@ export default function Week7AdminPanel() {
                             <td className="py-3 font-bold text-sm">{t.term}</td>
                             <td className="py-3 text-xs text-slate-400">{t.category || 'General'}</td>
                             <td className="py-3 text-right space-x-2">
-                              <button onClick={() => { setModalType('terms'); setEditingItem(t); setFormInputs(t); }} className="px-2 py-1 bg-slate-800 text-xs rounded">Edit</button>
-                              <button onClick={() => handleDeleteItem('terms', t.id)} className="px-2 py-1 bg-red-950 text-red-300 text-xs rounded">Delete</button>
+                              <button onClick={() => { setModalType('terms'); setEditingItem(t); setFormInputs(t); }} className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded">Edit</button>
+                              <button onClick={() => handleDeleteItem('terms', t.id)} className="px-2 py-1 bg-red-950 hover:bg-red-900 text-red-300 text-xs rounded">Delete</button>
                             </td>
                           </tr>
                       ))}
@@ -542,7 +542,7 @@ export default function Week7AdminPanel() {
                   <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl">
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-bold">💡 AI Generation Examples (CRUD)</h3>
-                      <button onClick={() => { setModalType('aiExamples'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 text-xs font-bold rounded-xl">+ Add Example</button>
+                      <button onClick={() => { setModalType('aiExamples'); setEditingItem(null); setFormInputs({}); }} className="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl">+ Add Example</button>
                     </div>
                     <table className="w-full text-left text-sm text-slate-300">
                       <thead className="border-b border-slate-800 text-xs uppercase text-slate-400">
@@ -554,8 +554,8 @@ export default function Week7AdminPanel() {
                             <td className="py-3 font-bold text-sm">{ex.title}</td>
                             <td className="py-3 text-xs text-slate-400 max-w-xs truncate">{ex.output_content}</td>
                             <td className="py-3 text-right space-x-2">
-                              <button onClick={() => { setModalType('aiExamples'); setEditingItem(ex); setFormInputs(ex); }} className="px-2 py-1 bg-slate-800 text-xs rounded">Edit</button>
-                              <button onClick={() => handleDeleteItem('ai_generation_examples', ex.id)} className="px-2 py-1 bg-red-950 text-red-300 text-xs rounded">Delete</button>
+                              <button onClick={() => { setModalType('aiExamples'); setEditingItem(ex); setFormInputs(ex); }} className="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-xs rounded">Edit</button>
+                              <button onClick={() => handleDeleteItem('ai_generation_examples', ex.id)} className="px-2 py-1 bg-red-950 hover:bg-red-900 text-red-300 text-xs rounded">Delete</button>
                             </td>
                           </tr>
                       ))}
@@ -577,7 +577,7 @@ export default function Week7AdminPanel() {
                           <div key={img.id} className="p-3 bg-slate-950 border border-slate-800 rounded-2xl relative group">
                             <img src={img.file_url} className="w-full h-24 object-cover rounded-xl mb-2" alt="Uploaded" />
                             <p className="text-xs text-slate-400 truncate">{img.file_name}</p>
-                            <button onClick={() => handleDeleteItem('images', img.id)} className="mt-2 w-full py-1 bg-red-950 text-red-300 text-xs rounded-lg">Delete Image</button>
+                            <button onClick={() => handleDeleteItem('images', img.id)} className="mt-2 w-full py-1 bg-red-950 hover:bg-red-900 text-red-300 text-xs rounded-lg">Delete Image</button>
                           </div>
                       ))}
                     </div>
@@ -590,50 +590,85 @@ export default function Week7AdminPanel() {
 
         {/* 通用 Modal 弹窗逻辑 */}
         {modalType && (
-            <div className="fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
-              <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl max-w-md w-full">
+            <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+              <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl max-w-md w-full shadow-2xl">
                 <h3 className="text-lg font-bold mb-4">{editingItem ? 'Edit Item' : 'Create New Item'}</h3>
-                <form onSubmit={handleSaveModal} className="space-y-4 text-sm">
-                  {modalType === 'terms' && (
-                      <>
-                        <div><label className="block text-xs text-slate-400 mb-1">Term</label><input type="text" value={formInputs.term || ''} onChange={e => setFormInputs({...formInputs, term: e.target.value})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" required /></div>
-                        <div><label className="block text-xs text-slate-400 mb-1">Category</label><input type="text" value={formInputs.category || ''} onChange={e => setFormInputs({...formInputs, category: e.target.value})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" /></div>
-                      </>
-                  )}
+                <form onSubmit={handleSaveModal} className="space-y-4">
                   {modalType === 'allowedDomains' && (
-                      <div><label className="block text-xs text-slate-400 mb-1">Domain (e.g. columbia.edu)</label><input type="text" value={formInputs.domain || ''} onChange={e => setFormInputs({...formInputs, domain: e.target.value})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" required /></div>
+                      <div>
+                        <label className="block text-xs text-slate-400 mb-1">Domain (e.g. columbia.edu)</label>
+                        <input type="text" required value={formInputs.domain || ''} onChange={(e) => setFormInputs({ ...formInputs, domain: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+                      </div>
                   )}
+
                   {modalType === 'whitelistedEmails' && (
-                      <div><label className="block text-xs text-slate-400 mb-1">Email Address</label><input type="email" value={formInputs.email || ''} onChange={e => setFormInputs({...formInputs, email: e.target.value})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" required /></div>
+                      <div>
+                        <label className="block text-xs text-slate-400 mb-1">Email Address</label>
+                        <input type="email" required value={formInputs.email || ''} onChange={(e) => setFormInputs({ ...formInputs, email: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+                      </div>
                   )}
+
                   {modalType === 'llmProviders' && (
                       <>
-                        <div><label className="block text-xs text-slate-400 mb-1">Provider Name (e.g. OpenAI)</label><input type="text" value={formInputs.name || ''} onChange={e => setFormInputs({...formInputs, name: e.target.value})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" required /></div>
-                        <div><label className="block text-xs text-slate-400 mb-1">API Base URL</label><input type="text" value={formInputs.api_base_url || ''} onChange={e => setFormInputs({...formInputs, api_base_url: e.target.value})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" /></div>
+                        <div>
+                          <label className="block text-xs text-slate-400 mb-1">Provider Name (e.g. OpenAI)</label>
+                          <input type="text" required value={formInputs.name || ''} onChange={(e) => setFormInputs({ ...formInputs, name: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-slate-400 mb-1">API Base URL</label>
+                          <input type="text" value={formInputs.api_base_url || ''} onChange={(e) => setFormInputs({ ...formInputs, api_base_url: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+                        </div>
                       </>
                   )}
+
                   {modalType === 'llmModels' && (
-                      <div><label className="block text-xs text-slate-400 mb-1">Model Name (e.g. gpt-4o)</label><input type="text" value={formInputs.model_name || ''} onChange={e => setFormInputs({...formInputs, model_name: e.target.value})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" required /></div>
+                      <div>
+                        <label className="block text-xs text-slate-400 mb-1">Model Name (e.g. gpt-4o)</label>
+                        <input type="text" required value={formInputs.model_name || ''} onChange={(e) => setFormInputs({ ...formInputs, model_name: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+                      </div>
                   )}
+
+                  {modalType === 'terms' && (
+                      <>
+                        <div>
+                          <label className="block text-xs text-slate-400 mb-1">Term</label>
+                          <input type="text" required value={formInputs.term || ''} onChange={(e) => setFormInputs({ ...formInputs, term: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-slate-400 mb-1">Category</label>
+                          <input type="text" value={formInputs.category || ''} onChange={(e) => setFormInputs({ ...formInputs, category: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+                        </div>
+                      </>
+                  )}
+
                   {modalType === 'aiExamples' && (
                       <>
-                        <div><label className="block text-xs text-slate-400 mb-1">Title</label><input type="text" value={formInputs.title || ''} onChange={e => setFormInputs({...formInputs, title: e.target.value})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" required /></div>
-                        <div><label className="block text-xs text-slate-400 mb-1">Output Content</label><input type="text" value={formInputs.output_content || ''} onChange={e => setFormInputs({...formInputs, output_content: e.target.value})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" /></div>
+                        <div>
+                          <label className="block text-xs text-slate-400 mb-1">Title</label>
+                          <input type="text" required value={formInputs.title || ''} onChange={(e) => setFormInputs({ ...formInputs, title: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+                        </div>
+                        <div>
+                          <label className="block text-xs text-slate-400 mb-1">Output Content</label>
+                          <textarea value={formInputs.output_content || ''} onChange={(e) => setFormInputs({ ...formInputs, output_content: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white h-24" />
+                        </div>
                       </>
                   )}
+
                   {modalType === 'promptChainMix' && (
-                      <div><label className="block text-xs text-slate-400 mb-1">Mix Weight (Numeric)</label><input type="number" step="0.1" value={formInputs.mix_weight || 1.0} onChange={e => setFormInputs({...formInputs, mix_weight: parseFloat(e.target.value)})} className="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl" required /></div>
+                      <div>
+                        <label className="block text-xs text-slate-400 mb-1">Mix Weight (Numeric)</label>
+                        <input type="number" step="0.1" value={formInputs.mix_weight || ''} onChange={(e) => setFormInputs({ ...formInputs, mix_weight: parseFloat(e.target.value) })} className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white" />
+                      </div>
                   )}
 
                   <div className="flex justify-end gap-3 pt-3">
-                    <button type="button" onClick={() => setModalType(null)} className="px-4 py-2 bg-slate-800 rounded-xl">Cancel</button>
-                    <button type="submit" className="px-4 py-2 bg-indigo-600 font-bold rounded-xl">Save</button>
+                    <button type="button" onClick={() => setModalType(null)} className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-xs font-bold rounded-xl text-slate-300">Cancel</button>
+                    <button type="submit" className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-xs font-bold rounded-xl text-white">Save</button>
                   </div>
                 </form>
               </div>
             </div>
         )}
-
       </div>
   )
 }
